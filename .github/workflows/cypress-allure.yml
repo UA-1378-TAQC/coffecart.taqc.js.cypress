@@ -59,3 +59,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-report
+
+      - name: Send link to Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"✅ Allure Report is ready: https://ima1234.github.io/coffecart.taqc.js.cypress/\"}" \
+          ${{ secrets.DISCORD_WEBHOOK }}
