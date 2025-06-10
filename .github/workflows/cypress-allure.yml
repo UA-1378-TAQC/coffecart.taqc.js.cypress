@@ -68,9 +68,9 @@ jobs:
           ${{ secrets.DISCORD_WEBHOOK }}
 
   notify-pull-request:
-  if: github.event_name == 'pull_request'
-  runs-on: ubuntu-latest
-  steps:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
     - name: Send PR link to Discord
       run: |
         curl -H "Content-Type: application/json" \
