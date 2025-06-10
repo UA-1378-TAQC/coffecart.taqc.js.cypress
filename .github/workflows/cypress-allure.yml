@@ -66,3 +66,14 @@ jobs:
           -X POST \
           -d "{\"content\": \"✅ Allure Report is ready: https://UA-1378-TAQC.github.io/coffecart.taqc.js.cypress/\"}" \
           ${{ secrets.DISCORD_WEBHOOK }}
+
+      - notify-pull-request:
+        if: github.event_name == 'pull_request'
+        runs-on: ubuntu-latest
+        steps:
+          - name: Send PR link to Discord
+            run: |
+              curl -H "Content-Type: application/json" \
+              -X POST \
+              -d "{\"content\": \"📢 New Pull Request: ${{ github.event.pull_request.html_url }} by ${{ github.event.pull_request.user.login }}\"}" \
+              ${{ secrets.DISCORD_WEBHOOK_PR }}
