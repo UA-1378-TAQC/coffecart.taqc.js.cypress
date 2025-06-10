@@ -64,5 +64,5 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
           -X POST \
-          -d "{\"content\": \"✅ Allure Report is ready: https:/UA-1378-TAQC.github.io/coffecart.taqc.js.cypress/\"}" \
+          -d "{\"content\": \"✅ Allure Report is ready: https://UA-1378-TAQC.github.io/coffecart.taqc.js.cypress/\"}" \
           ${{ secrets.DISCORD_WEBHOOK }}
