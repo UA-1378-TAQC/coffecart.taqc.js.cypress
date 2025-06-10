@@ -3,6 +3,8 @@ name: Allure Report Workflow
 on:
   push:
     branches: [main]
+  pull_request:
+    types: [opened, reopened, ready_for_review]
   workflow_dispatch:
 
 jobs:
@@ -28,13 +30,13 @@ jobs:
         run: npm install -g allure-commandline
 
       - name: Run Cypress tests
-        run: npx cypress run || true # Додано '|| true' щоб workflow не падав, якщо тести не пройшли
+        run: npx cypress run || true
 
       - name: Create empty allure-results directory if not exists
-        run: mkdir -p allure-results # Цей крок створює каталог, якщо його немає
+        run: mkdir -p allure-results
 
       - name: Generate Allure Report (npm script)
-        run: npm run allure:generate # Якщо цей скрипт використовує allure generate, він має працювати
+        run: npm run allure:generate
 
       - name: Get Allure history
         uses: actions/checkout@v3
@@ -51,7 +53,7 @@ jobs:
           gh_pages: gh-pages
           allure_report: allure-report
           keep_reports: 20
-          
+
       - name: Deploy Allure Report to GitHub Pages
         if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v3
@@ -67,13 +69,14 @@ jobs:
           -d "{\"content\": \"✅ Allure Report is ready: https://UA-1378-TAQC.github.io/coffecart.taqc.js.cypress/\"}" \
           ${{ secrets.DISCORD_WEBHOOK }}
 
-  notify-pull-request:
+  notify_pull_request:
+    name: Notify Discord About PR
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-    - name: Send PR link to Discord
-      run: |
-        curl -H "Content-Type: application/json" \
-        -X POST \
-        -d "{\"content\": \"📢 New Pull Request: ${{ github.event.pull_request.html_url }} by ${{ github.event.pull_request.user.login }}\"}" \
-        ${{ secrets.DISCORD_WEBHOOK_PR }}
+      - name: Send PR link to Discord
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"📢 New Pull Request: ${{ github.event.pull_request.html_url }} by ${{ github.event.pull_request.user.login }}\"}" \
+          ${{ secrets.DISCORD_WEBHOOK_PR }}
